@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.*;
-
-
 
 @RestController
 public class BackendController {
@@ -20,8 +17,6 @@ public class BackendController {
     private static final Logger log = LoggerFactory.getLogger(BackendController.class);
 
     public static volatile Integer FINISH_PROCESS_COUNT = 0;
-
-
 
     //接收过滤节点发过来的traceId
     @RequestMapping("/Summary")
