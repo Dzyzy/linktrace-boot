@@ -1,25 +1,15 @@
 package com.linktrace.linktraceboot4;
 
-import java.util.List;
 
 public class Trace {
-    private String traceId;
     private String prot;
-    private String listJson;
+    private String mapJson;
 
-    public Trace(String traceId, String prot, String listJson) {
-        this.traceId = traceId;
+    public Trace(String prot, String mapJson) {
         this.prot = prot;
-        this.listJson = listJson;
+        this.mapJson = mapJson;
     }
 
-    public String getTraceId() {
-        return traceId;
-    }
-
-    public void setTraceId(String traceId) {
-        this.traceId = traceId;
-    }
 
     public String getProt() {
         return prot;
@@ -29,11 +19,11 @@ public class Trace {
         this.prot = prot;
     }
 
-    public String getList() {
-        return listJson;
+    public String getMapJson() {
+        return mapJson;
     }
 
-    public void setList(String listJson) {
-        this.listJson = listJson;
+    public void setMapJson(String mapJson) {
+        this.mapJson = mapJson;
     }
 }

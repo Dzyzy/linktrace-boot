@@ -88,7 +88,7 @@ public class ClientProcessData implements Runnable {
                         } else if(ClientController.endTraceIdList.contains(traceid)) {
                             ClientDataSend.traceIdQueue.offer(traceMap.get(traceid));
                             ClientController.endTraceIdList.remove(traceid);
-                        } else if(ClientProcessData.endTraceIdList.size() < 30000) {
+                        } else if(ClientProcessData.endTraceIdList.size() < 20000) {
                             ClientProcessData.endTraceIdList.add(traceid);
                             ClientProcessData.endSpanMap.put(traceid, ClientProcessData.traceMap.get(traceid));
                         }
@@ -97,7 +97,7 @@ public class ClientProcessData implements Runnable {
                         ClientProcessData.traceIdSet.remove(traceid);
                     }
 
-//                    if(ClientProcessData.traceIdQueue.size() > 2000) {
+//                    if(ClientProcessData.traceIdQueue.size() > 1000) {
 //                        while(true) {
 //                            Thread.sleep(10);
 //                            if(ClientProcessData.traceIdQueue.size() == 0) {

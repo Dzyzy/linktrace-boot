@@ -12,20 +12,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ClientController {
 
     public static List<String> endTraceIdList = new ArrayList<>();
 
+    public static Map<String, List<String>> map = new HashMap<>(255);
+
     @RequestMapping("/findTraceId")
     public void filterData(@RequestParam String traceId) {
         if(ClientProcessData.endSpanMap.containsKey(traceId)) {
+            map.put(traceId, ClientProcessData.endSpanMap.get(traceId));
+            ClientProcessData.endSpanMap.remove(traceId);
+        }
+        endTraceIdList.add(traceId);
+        if(map.size() >= 250) {
             try {
                 RequestBody body = new FormBody.Builder()
-                        .add("traceId", traceId)
-                        .add("spanList", JSON.toJSONString(ClientProcessData.endSpanMap.get(traceId)))
+                        .add("mapJson", JSON.toJSONString(map))
                         .add("port", "0")
                         .build();
                 Request request = new Request.Builder()
@@ -34,11 +42,10 @@ public class ClientController {
                         .build();
                 Response response = Utils.callHttp(request);
                 response.close();
-                ClientProcessData.endSpanMap.remove(traceId);
             } catch (IOException e) {
                 System.out.println("发送失败");
             }
+            map = new HashMap<>(255);
         }
-        endTraceIdList.add(traceId);
     }
 }

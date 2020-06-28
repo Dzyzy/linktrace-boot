@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
@@ -28,23 +30,29 @@ public class ClientDataSend implements Runnable {
 
     @Override
     public void run() {
+        Map<String, List<String>> map = new HashMap<>(255);
         while(true) {
             if(!traceIdQueue.isEmpty()) {
                 List<String> list = traceIdQueue.poll();
                 String[] strings = list.get(0).split("\\|");
                 String traceId = strings[0];
-                sendData(traceId, list);
+                map.put(traceId, list);
+            } else if(map.size() >= 250) {
+                sendData(map);
+                map = new HashMap<>(255);
             } else if(mark && traceIdQueue.isEmpty()) {
+                if(map.size() > 0) {
+                    sendData(map);
+                }
                 break;
             }
         }
     }
 
-    public static void sendData(String traceId, List<String> spanList) {
+    public static void sendData(Map<String, List<String>> map) {
         try {
             RequestBody body = new FormBody.Builder()
-                    .add("traceId", traceId)
-                    .add("spanList", JSON.toJSONString(spanList))
+                    .add("mapJson", JSON.toJSONString(map))
                     .add("port", System.getProperty("server.port", "8080"))
                     .build();
             Request request = new Request.Builder()
