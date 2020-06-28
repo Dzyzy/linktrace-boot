@@ -38,18 +38,31 @@ public class ClientDataSend implements Runnable {
                 String traceId = strings[0];
                 map.put(traceId, list);
             } else if(map.size() >= 250) {
-                sendData(map);
+                sendData(map, false);
                 map = new HashMap<>(255);
             } else if(mark && traceIdQueue.isEmpty()) {
                 if(map.size() > 0) {
-                    sendData(map);
+                    sendData(map, true);
                 }
                 break;
             }
         }
     }
 
-    public static void sendData(Map<String, List<String>> map) {
+    //数据全部发送完成，发送请求给汇总节点
+    private void finish() {
+        try {
+            Request request = new Request.Builder()
+                    .url("http://localhost:8002/finish")
+                    .build();
+            Response response = Utils.callHttp(request);
+            response.close();
+        } catch (IOException e) {
+            System.out.println("发送失败2");
+        }
+    }
+
+    public void sendData(Map<String, List<String>> map, boolean flag) {
         try {
             RequestBody body = new FormBody.Builder()
                     .add("mapJson", JSON.toJSONString(map))
@@ -63,6 +76,9 @@ public class ClientDataSend implements Runnable {
             response.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if(flag) {
+            finish();
         }
     }
 

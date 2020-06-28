@@ -1,7 +1,5 @@
 package com.linktrace.linktraceboot4.backendprocess;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.linktrace.linktraceboot4.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +15,8 @@ public class BackendController {
     private static final Logger log = LoggerFactory.getLogger(BackendController.class);
 
     public static volatile Integer FINISH_PROCESS_COUNT = 0;
+
+    public static int num = 0;
 
     //接收过滤节点发过来的traceId
     @RequestMapping("/Summary")

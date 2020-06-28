@@ -54,6 +54,14 @@ public class BackendWorking implements Runnable {
                                         .post(body)
                                         .build();
                                 Response response = Utils.callHttp(request);
+                                String str = response.body().string();
+                                if(!str.equals("")) {
+                                    List<String> l = JSON.parseObject(str,
+                                            new TypeReference<List<String>>() {});
+                                    traceIdBatch.getTraceIdList().addAll(l);
+                                    BackendProcessData.traceIdQueue.offer(traceIdBatch);
+                                    traceIdBatchMap.put(traceId, new TraceIdBatch());
+                                }
                                 response.close();
                             } catch (IOException e) {
                                 System.out.println("发送失败");

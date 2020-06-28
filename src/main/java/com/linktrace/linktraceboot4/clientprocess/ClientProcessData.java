@@ -97,15 +97,6 @@ public class ClientProcessData implements Runnable {
                         ClientProcessData.traceIdSet.remove(traceid);
                     }
 
-//                    if(ClientProcessData.traceIdQueue.size() > 1000) {
-//                        while(true) {
-//                            Thread.sleep(10);
-//                            if(ClientProcessData.traceIdQueue.size() == 0) {
-//                                break;
-//                            }
-//                        }
-//                    }
-
                     //判断是否为符合要求的traceId
                     if (strings.length > 8) {
                         String tags = strings[8];
@@ -137,21 +128,7 @@ public class ClientProcessData implements Runnable {
         }
         //向汇总节点发送过滤完成的请求
         ClientDataSend.mark = true;
-        finish();
         log.info("过滤结束");
-    }
-
-    //数据全部发送完成，发送请求给汇总节点
-    private void finish() {
-        try {
-            Request request = new Request.Builder()
-                    .url("http://localhost:8002/finish")
-                    .build();
-            Response response = Utils.callHttp(request);
-            response.close();
-        } catch (IOException e) {
-            System.out.println("发送失败2");
-        }
     }
 
     //获取静态文件的路径

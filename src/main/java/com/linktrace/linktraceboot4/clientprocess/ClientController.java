@@ -21,31 +21,15 @@ public class ClientController {
 
     public static List<String> endTraceIdList = new ArrayList<>();
 
-    public static Map<String, List<String>> map = new HashMap<>(255);
-
     @RequestMapping("/findTraceId")
-    public void filterData(@RequestParam String traceId) {
+    public String filterData(@RequestParam String traceId) {
+        String json = "";
         if(ClientProcessData.endSpanMap.containsKey(traceId)) {
-            map.put(traceId, ClientProcessData.endSpanMap.get(traceId));
+            json = JSON.toJSONString(ClientProcessData.endSpanMap.get(traceId));
             ClientProcessData.endSpanMap.remove(traceId);
+        } else {
+            endTraceIdList.add(traceId);
         }
-        endTraceIdList.add(traceId);
-        if(map.size() >= 250) {
-            try {
-                RequestBody body = new FormBody.Builder()
-                        .add("mapJson", JSON.toJSONString(map))
-                        .add("port", "0")
-                        .build();
-                Request request = new Request.Builder()
-                        .url("http://localhost:8002/Summary")
-                        .post(body)
-                        .build();
-                Response response = Utils.callHttp(request);
-                response.close();
-            } catch (IOException e) {
-                System.out.println("发送失败");
-            }
-            map = new HashMap<>(255);
-        }
+        return json;
     }
 }
