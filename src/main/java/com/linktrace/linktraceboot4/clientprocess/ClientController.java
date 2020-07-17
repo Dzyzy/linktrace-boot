@@ -28,6 +28,9 @@ public class ClientController {
             json = JSON.toJSONString(ClientProcessData.endSpanMap.get(traceId));
             ClientProcessData.endSpanMap.remove(traceId);
         } else {
+            if(endTraceIdList == null) {
+                endTraceIdList = new ArrayList<>();
+            }
             endTraceIdList.add(traceId);
         }
         return json;

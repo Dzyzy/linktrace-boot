@@ -1,6 +1,7 @@
 package com.linktrace.linktraceboot4.clientprocess;
 
 
+import com.linktrace.linktraceboot4.CommonController;
 import com.linktrace.linktraceboot4.Span;
 import com.linktrace.linktraceboot4.Utils;
 import okhttp3.Request;
@@ -88,9 +89,12 @@ public class ClientProcessData implements Runnable {
                         } else if(ClientController.endTraceIdList.contains(traceid)) {
                             ClientDataSend.traceIdQueue.offer(traceMap.get(traceid));
                             ClientController.endTraceIdList.remove(traceid);
-                        } else if(ClientProcessData.endTraceIdList.size() < 20000) {
+                        } else if(ClientProcessData.endTraceIdList.size() < 40000) {
                             ClientProcessData.endTraceIdList.add(traceid);
                             ClientProcessData.endSpanMap.put(traceid, ClientProcessData.traceMap.get(traceid));
+                        } else if(ClientProcessData.endTraceIdList.size() >= 40000) {
+                            ClientProcessData.endTraceIdList = new HashSet<>(40005);
+                            ClientProcessData.endSpanMap = new HashMap<>(40005);
                         }
                         ClientProcessData.badTraceIdList.remove(traceid);
                         ClientProcessData.traceMap.put(traceid, null);
@@ -135,12 +139,11 @@ public class ClientProcessData implements Runnable {
     private String getPath(){
         String port = System.getProperty("server.port", "8080");
         if ("8000".equals(port)) {
-            return "http://localhost:" + 80 + "/trace1.data";
+            return "http://localhost:" + CommonController.getDataSourcePort() + "/trace1.data";
         } else if ("8001".equals(port)){
-            return "http://localhost:" + 80 + "/trace2.data";
+            return "http://localhost:" + CommonController.getDataSourcePort() + "/trace2.data";
         } else {
             return null;
         }
     }
 }
-

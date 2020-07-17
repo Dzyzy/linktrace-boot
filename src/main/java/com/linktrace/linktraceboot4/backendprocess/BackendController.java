@@ -16,8 +16,6 @@ public class BackendController {
 
     public static volatile Integer FINISH_PROCESS_COUNT = 0;
 
-    public static int num = 0;
-
     //接收过滤节点发过来的traceId
     @RequestMapping("/Summary")
     public void Summary(@RequestParam String mapJson, @RequestParam String port) {

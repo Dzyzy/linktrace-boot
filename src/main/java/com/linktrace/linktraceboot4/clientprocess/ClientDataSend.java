@@ -30,16 +30,16 @@ public class ClientDataSend implements Runnable {
 
     @Override
     public void run() {
-        Map<String, List<String>> map = new HashMap<>(255);
+        Map<String, List<String>> map = new HashMap<>(20);
         while(true) {
             if(!traceIdQueue.isEmpty()) {
                 List<String> list = traceIdQueue.poll();
                 String[] strings = list.get(0).split("\\|");
                 String traceId = strings[0];
                 map.put(traceId, list);
-            } else if(map.size() >= 250) {
+            } else if(map.size() >= 15) {
                 sendData(map, false);
-                map = new HashMap<>(255);
+                map = new HashMap<>(20);
             } else if(mark && traceIdQueue.isEmpty()) {
                 if(map.size() > 0) {
                     sendData(map, true);

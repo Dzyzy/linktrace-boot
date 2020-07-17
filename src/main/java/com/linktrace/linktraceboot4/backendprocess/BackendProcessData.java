@@ -51,7 +51,6 @@ public class BackendProcessData implements Runnable {
             }
         }
         sendCheckSum();
-        System.out.println(BackendWorking.traceIdQueue.size());
     }
 
     private void sendCheckSum() {
